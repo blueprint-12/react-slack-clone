@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react", //jsx가 다른 곳에서도 인식될 수 있기 때문에
+    "module": "esnext", //최신 모듈시스템(import export을 쓰겠다는 것
+    "moduleResolution": "Node",
+    "target": "es5",
+    "strict": true,
+    "resolveJsonModule": true, //import json 허락
+    "baseUrl": ".", //import 할 때, 절대경로처럼 간편하게 설정
+    "paths": {
+      "@hooks/*": ["hooks/*"],
+      "@components/*": ["components/*"],
+      "@layouts/*": ["layouts/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"],
+      "@typings/*": ["typings/*"]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "Node",
+      "target": "es5",
+      "esModuleInterop": true
+    }
+  }
+}
