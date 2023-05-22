@@ -15,7 +15,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const config: Configuration = {
   name: 'my-front',
   mode: isDevelopment ? 'development' : 'production',
-  devtool: !isDevelopment ? 'hidden-source-map' : 'eval',
+  devtool: isDevelopment ? 'source-map' : 'hidden-source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -81,6 +81,9 @@ const config: Configuration = {
     port: 3090,
     devMiddleware: { publicPath: '/dist/' },
     static: { directory: path.resolve(__dirname) },
+    //CORS에러 프론트에서 해결하는 방법
+    // ? /api/주소로 보내는 요청은 주소를 target으로 바꿔서 보내겠다 라는 의미
+    // 그렇다면 axios.post요청에 url을 /api/something으로 보내면 target으로 변환된다.
     proxy: {
       '/api/': {
         target: 'http://localhost:3095',
