@@ -84,12 +84,12 @@ const config: Configuration = {
     //CORS에러 프론트에서 해결하는 방법
     // ? /api/주소로 보내는 요청은 주소를 target으로 바꿔서 보내겠다 라는 의미
     // 그렇다면 axios.post요청에 url을 /api/something으로 보내면 target으로 변환된다.
-    proxy: {
-      '/api/': {
-        target: 'http://localhost:3095',
-        changeOrigin: true,
-      },
-    },
+    // proxy: {
+    //   '/api/': {
+    //     target: 'http://localhost:3095',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
 };
 
