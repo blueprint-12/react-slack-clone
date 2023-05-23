@@ -4,9 +4,13 @@
 
 1. [2023-05-22] React.lazy() 활용시 Suspense 컴포넌트 fallback이 없으면 error
 
-- 18버전 이전에는 부분 지원, 18버전부터는 제대로 지원
-- lazy로 로드하는 컴포넌트 자체가 비동기적으로 로드하는 것이므로 Link to 같은 라우팅 컴포넌트를 사용할 때 fallback이 필요하다.
-- [Suspense with router React v18 docs](https://react.dev/reference/react/Suspense#preventing-already-revealed-content-from-hiding)
+   - 18버전 이전에는 부분 지원, 18버전부터는 제대로 지원
+   - lazy로 로드하는 컴포넌트 자체가 비동기적으로 로드하는 것이므로 Link to 같은 라우팅 컴포넌트를 사용할 때 fallback이 필요하다.
+   - [Suspense with router React v18 docs](https://react.dev/reference/react/Suspense#preventing-already-revealed-content-from-hiding)
+
+2. [2023-05-23] 페이지 라우팅 (Link 컴포넌트)시 fallback으로 걸어둔 loading을 아예 안보이게 할 순 없을까?
+
+   - 라우팅하는 과정에서 네트워크 탭으로 Slow 3G를 걸었을 때,fallback 컴포넌트가 보이는 게 UI적으로 별로이다.
 
 ## 설치 패키지
 
@@ -26,6 +30,11 @@
 - 리덕스를 사용하면 비동기 코드를 컴포넌트랑 완전분리할 수 있다는 장점이 있다.(리덕스 사가 혹은 thunk를 통해서 가능)
   - 하지만, 굳이 비동기 코드를 컴포넌트랑 구별하지 않아도 되는 경우가 있음(한 컴포넌트 내에서만 사용하는 비동기 처리 코드 => 재활용이 필요x)
   - 리덕스를 사용하면 한 곳에서 컴포넌트과 분리된 로직과 스테이트를 관리하고 작성할 수 있지만 코드의 양이 방대해짐 필요에 따라서만 사용하면 된다.
+
+### SWR 사용(redux대신의 전역상태관리툴)
+
+- next.js 팀에서 만듦 => Next와 호환성 good(Next말고도 React에서도 잘 돌아감)
+-
 
 ## webpack 설정시 추가 패키지
 
