@@ -6,6 +6,7 @@
 
 - 18버전 이전에는 부분 지원, 18버전부터는 제대로 지원
 - lazy로 로드하는 컴포넌트 자체가 비동기적으로 로드하는 것이므로 Link to 같은 라우팅 컴포넌트를 사용할 때 fallback이 필요하다.
+- [Suspense with router React v18 docs](https://react.dev/reference/react/Suspense#preventing-already-revealed-content-from-hiding)
 
 ## 설치 패키지
 
