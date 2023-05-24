@@ -83,7 +83,7 @@ const config: Configuration = {
     static: { directory: path.resolve(__dirname) },
     //CORS에러 프론트에서 해결하는 방법
     // ? /api/주소로 보내는 요청은 주소를 target으로 바꿔서 보내겠다 라는 의미
-    // 그렇다면 axios.post요청에 url을 /api/something으로 보내면 target으로 변환된다.
+    // proxy를 사용하면 3095(실제론 3090이지만 바꿔서) => 3095로 요청하는 것임
     // proxy: {
     //   '/api/': {
     //     target: 'http://localhost:3095',
