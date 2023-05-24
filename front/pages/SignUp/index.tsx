@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 
 const SignUp = () => {
   //TODO: 화면에 표시하는 데이터들은 무조건 state로 만들어주기
-  const [nickname, onChangeNickname] = useInput<string>('');
-  const [email, onChangeEmail] = useInput<string>('');
+  const [nickname, onChangeNickname, setNickname] = useInput<string>('');
+  const [email, onChangeEmail, setEmail] = useInput<string>('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   //TODO: password mismatch
@@ -43,14 +43,17 @@ const SignUp = () => {
       if (!mismatchError && nickname) {
         console.log('서버로 회원가입하기');
         axios
-          .post('/api/users', {
+          .post('http://localhost:3095/api/users', {
             email,
             nickname,
             password,
           })
           .then((res) => {
             // 비동기 성공 단계
-            console.log(res);
+            setEmail('');
+            setNickname('');
+            setPassword('');
+            setPasswordCheck('');
             setSignUpSuccess(true);
           })
           .catch((err) => {
