@@ -2,22 +2,29 @@ import useInput from '@hooks/useInput';
 import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/style';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const navigate = useNavigate();
-  const { data, error, isLoading, mutate } = useSWR('http://localhost:3095/api/users/login', fetcher, {
-    dedupingInterval: 20000,
-  });
+  // ? data, error가 바뀌는 순간 `리렌더링`
+  // 마운트되는 순간부터 자꾸 fetcher함수 실행해서 막는 설정 => mutate()로 수동 실행
+  const { data: userData, error, isLoading, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+
+  console.log('data', userData);
+
   const [logInError, setLogInError] = useState(false);
-  const [email, onChangeEmail] = useInput('');
-  const [password, onChangePassword] = useInput('');
+  const [email, onChangeEmail, setEmail] = useInput('');
+  const [password, onChangePassword, setPassword] = useInput('');
+
   const onSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
+
       setLogInError(false);
+      // !input에 클릭만해도 라우팅되는 문제 이전 state가 초기화가 안되서 그런 것 + focus 문제
+      setEmail('');
+      setPassword('');
       axios
         .post(
           'http://localhost:3095/api/users/login',
@@ -26,18 +33,22 @@ const LogIn = () => {
             withCredentials: true,
           },
         )
-        .then(() => {
+        .then((res) => {
           // update the local data immediately and revalidate (refetch)
-          // NOTE: key is not required when using useSWR's mutate as it's pre-bound
-          mutate();
+          //! 로그인이 성공하면 revalidate함
+          mutate(res.data, false);
         })
         .catch((error) => {
           console.dir(error);
           setLogInError(error.response?.status === 401);
         });
     },
-    [email, password],
+    [email, password, mutate],
   );
+
+
+  // ? content return은 hooks아래에 존재해야 한다.
+  if (userData) return <Navigate to="/workspace/channel" replace={true} />;
 
   return (
     <div id="container">
@@ -56,7 +67,9 @@ const LogIn = () => {
           </div>
           {logInError && <Error>이메일과 비밀번호 조합이 일치하지 않습니다.</Error>}
         </Label>
-        <Button type="submit">로그인</Button>
+        <Button type="submit" disabled={!email || !password}>
+          로그인
+        </Button>
       </Form>
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
