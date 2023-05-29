@@ -8,7 +8,7 @@ import useSWR from 'swr';
 
 const LogIn = () => {
   // ? data, error가 바뀌는 순간 `리렌더링`
-  // 마운트되는 순간부터 자꾸 fetcher함수 실행해서 막는 설정 => mutate()로 수동 실행
+  // mutate는 서버에 api콜을 보내는게 아니라 데이터 수정을 해준다.
   const { data: userData, error, isLoading, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
 
   console.log('data', userData);
@@ -35,8 +35,9 @@ const LogIn = () => {
         )
         .then((res) => {
           // update the local data immediately and revalidate (refetch)
-          //! 로그인이 성공하면 revalidate함
-          mutate(res.data, false);
+          //! revalidate는 서버에 다시 api콜을 하는 것
+          //! mutate는 요청을 보내지않고 data값에 새로운 값을 넣어 갱신
+          mutate(res.data, { revalidate: false });
         })
         .catch((error) => {
           console.dir(error);
@@ -45,7 +46,6 @@ const LogIn = () => {
     },
     [email, password, mutate],
   );
-
 
   // ? content return은 hooks아래에 존재해야 한다.
   if (userData) return <Navigate to="/workspace/channel" replace={true} />;
