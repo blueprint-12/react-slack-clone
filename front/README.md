@@ -130,3 +130,12 @@ with options (sourceMap만 사용)
 }
 
 ```
+
+### gravatar
+
+- user default 이미지가 없을 경우, 랜덤 이미지 생성기
+- gitHub, gitlens도 gravatar을 사용한다.
+
+```bash
+yarn add gravatar @types/gravatar
+```
