@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Error, Header, Input, Label, LinkContainer, Success, Form } from './style';
+import { Button, Error, Header, Input, Label, LinkContainer, Success, Form } from './styles';
 import useInput from '@hooks/useInput';
 import axios from 'axios';
 // 리액트 라우터를 쓸 때에는 a태그보단 Link 태그 활용

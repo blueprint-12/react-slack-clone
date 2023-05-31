@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+// 모든 스타일을 다 컴포넌트 화x, 큰 단위만 컴포넌트로 만들고 작은 단위는 sass스타일로
 export const RightMenu = styled.div`
   float: right;
 `;

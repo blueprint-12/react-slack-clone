@@ -1,5 +1,5 @@
 import useInput from '@hooks/useInput';
-import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/style';
+import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/styles';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState, useEffect } from 'react';
@@ -37,7 +37,8 @@ const LogIn = () => {
           // update the local data immediately and revalidate (refetch)
           //! revalidate는 서버에 다시 api콜을 하는 것
           //! mutate는 요청을 보내지않고 data값에 새로운 값을 넣어 갱신
-          mutate(res.data, { revalidate: false });
+
+          mutate(res.data);
         })
         .catch((error) => {
           console.dir(error);
