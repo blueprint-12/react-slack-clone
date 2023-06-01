@@ -11,6 +11,10 @@ import {
   Chats,
   WorkspaceName,
   MenuScroll,
+  ProfileModal,
+  LogOutButton,
+  WorkspaceButton,
+  AddButton,
 } from './styles';
 
 import axios from 'axios';
@@ -18,6 +22,8 @@ import { Navigate, Outlet } from 'react-router';
 
 import gravatar from 'gravatar';
 import Menu from '@components/Menu';
+import { Link } from 'react-router-dom';
+import { IUser } from '@typings/db';
 
 const WorkSpace = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -27,7 +33,7 @@ const WorkSpace = () => {
     error,
     isLoading,
     mutate,
-  } = useSWR('http://localhost:3095/api/users', fetcher, { suspense: true });
+  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, { suspense: true });
   console.log('data', userData);
 
   const onClickUserProfile = useCallback(() => {
@@ -48,8 +54,12 @@ const WorkSpace = () => {
       });
   }, []);
 
+  const onClickCreateWorkSpace = useCallback(() => {}, []);
+
   // replace: true means REDIRECT
   if (userData === false) return <Navigate to="/login" replace={true} />;
+
+  if (!userData) return <>Loading.. userData...</>;
 
   return (
     <div>
@@ -59,14 +69,29 @@ const WorkSpace = () => {
           <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
           {showUserMenu && (
             <Menu style={{ right: 0, top: 38 }} show={showUserMenu} onCloseModal={onClickUserProfile}>
-              프로필 메뉴
+              <ProfileModal>
+                <img src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
+                <div>
+                  <span id="profile-name">{userData.nickname}</span>
+                  <span id="profile-active">Active</span>
+                </div>
+              </ProfileModal>
+              <LogOutButton onClick={onLogout}>로그아웃</LogOutButton>
             </Menu>
           )}
         </span>
       </RightMenu>
-      <button onClick={onLogout}>저눈 workspace의 버툰입니당</button>
       <WorkspaceWrapper>
-        <Workspaces>안녕</Workspaces>
+        <Workspaces>
+          {userData?.Workspaces.map((ws) => {
+            return (
+              <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
+                <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
+              </Link>
+            );
+          })}
+          <AddButton onClick={onClickCreateWorkSpace}>+</AddButton>
+        </Workspaces>
         <Channels>
           <WorkspaceName>Sleact</WorkspaceName>
           <MenuScroll>이 내부에 Menu컴포넌트</MenuScroll>
