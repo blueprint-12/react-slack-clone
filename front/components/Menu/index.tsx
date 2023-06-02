@@ -4,7 +4,7 @@ import { CloseModalButton, CreateMenu } from './styles';
 interface MenuProps {
   children: ReactNode;
   show: boolean;
-  onCloseModal: () => void;
+  onCloseModal: (e: any) => void;
   style: CSSProperties;
 }
 
