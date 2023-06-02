@@ -139,3 +139,12 @@ with options (sourceMap만 사용)
 ```bash
 yarn add gravatar @types/gravatar
 ```
+
+### react-toastify
+
+- 안내 메세지 팝업(토스트처럼 튀어오르는 모습) 제공
+- 사용자에게 데이터 처리 결과(e.g.에러 메세지)를 안내 팝업으로 보여줄 수 있음
+
+```bash
+yarn add react-toastify
+```
