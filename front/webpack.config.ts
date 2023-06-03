@@ -84,12 +84,12 @@ const config: Configuration = {
     //CORS에러 프론트에서 해결하는 방법
     // ? /api/주소로 보내는 요청은 주소를 target으로 바꿔서 보내겠다 라는 의미
     // proxy를 사용하면 3095(실제론 3090이지만 바꿔서) => 3095로 요청하는 것임
-    // proxy: {
-    //   '/api/': {
-    //     target: 'http://localhost:3095',
-    //     changeOrigin: true,
-    //   },
-    // },
+    proxy: {
+      '/api/': {
+        target: 'http://localhost:3095',
+        changeOrigin: true,
+      },
+    },
   },
 };
 
