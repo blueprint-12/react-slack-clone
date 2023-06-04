@@ -15,33 +15,46 @@ import {
   LogOutButton,
   WorkspaceButton,
   AddButton,
+  WorkspaceModal,
 } from './styles';
 
 import axios from 'axios';
-import { Navigate, Outlet } from 'react-router';
+import { Navigate, Outlet, useParams } from 'react-router';
 
 import gravatar from 'gravatar';
 import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import { Link } from 'react-router-dom';
-import { IUser } from '@typings/db';
+import { IChannel, IUser } from '@typings/db';
 import { Input, Label, Button } from '@pages/SignUp/styles';
 import useInput from '@hooks/useInput';
 import { toast } from 'react-toastify';
+import CreateChannelModal from '@components/CreateChannelModal';
+import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
 
 const WorkSpace = () => {
+  const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
+
+  const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
+
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
+  const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
 
-  const {
-    data: userData,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, { suspense: true ,dedupingInterval: 20000});
-  console.log('data', userData);
+  const { workspace } = useParams<{ workspace: string }>();
+  const { data: userData, mutate } = useSWR<IUser | false>('/api/users', fetcher, {
+    suspense: true,
+    dedupingInterval: 3000,
+  });
+
+  // TODO: SWR 3항연산자를 통해 userData가 있는 경우(로그인 상태)에만 api요청을 보낸다. (조건부 요청지원)
+  const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
+
+  // console.log('data', userData);
 
   const onClickUserProfile = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // TODO: 이벤트 버블링 막기
@@ -49,13 +62,17 @@ const WorkSpace = () => {
     setShowUserMenu((prev) => !prev);
   }, []);
 
+  // TODO: 열린 모든 모달 닫기
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
+    setShowCreateChannelModal(false);
+    setShowInviteChannelModal(false);
+    setShowInviteWorkspaceModal(false);
   }, []);
 
   const onLogout = useCallback(() => {
     axios
-      .post('http://localhost:3095/api/users/logout', null, {
+      .post('/api/users/logout', null, {
         withCredentials: true,
       })
       .then(() => {
@@ -79,7 +96,7 @@ const WorkSpace = () => {
       if (!newUrl || !newUrl.trim()) return;
       axios
         .post(
-          'http://localhost:3095/api/workspaces',
+          '/api/workspaces',
           {
             workspace: newWorkspace,
             url: newUrl,
@@ -100,6 +117,19 @@ const WorkSpace = () => {
     },
     [newWorkspace, newUrl],
   );
+
+  const toggleWorkspaceModal = useCallback(() => {
+    setShowWorkspaceModal((prev) => !prev);
+  }, []);
+
+  const onClickAddChannel = useCallback(() => {
+    setShowCreateChannelModal(true);
+  }, []);
+
+  const onClickInviteWorkspace = useCallback(() => {
+    setShowInviteWorkspaceModal(true);
+  }, []);
+
   // replace: true means REDIRECT
   if (userData === false) return <Navigate to="/login" replace={true} />;
 
@@ -137,8 +167,20 @@ const WorkSpace = () => {
           <AddButton onClick={onClickCreateWorkSpace}>+</AddButton>
         </Workspaces>
         <Channels>
-          <WorkspaceName>Sleact</WorkspaceName>
-          <MenuScroll>이 내부에 Menu컴포넌트</MenuScroll>
+          <WorkspaceName onClick={toggleWorkspaceModal}>Sleact</WorkspaceName>
+          <MenuScroll>
+            <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
+              <WorkspaceModal>
+                <h2>Sleact</h2>
+                <button onClick={onClickInviteWorkspace}>워크스페이스 초대하기</button>
+                <button onClick={onClickAddChannel}>채널만들기</button>
+                <button onClick={onLogout}>로그아웃</button>
+              </WorkspaceModal>
+            </Menu>
+            {channelData?.map((channel) => (
+              <div key={channel.id}>{channel.name}</div>
+            ))}
+          </MenuScroll>
         </Channels>
         <Chats>
           {/* 중첩라우팅 */}
@@ -158,6 +200,21 @@ const WorkSpace = () => {
           <Button type="submit">생성하기</Button>
         </form>
       </Modal>
+      <CreateChannelModal
+        show={showCreateChannelModal}
+        onCloseModal={onCloseModal}
+        setShowCreateChannelModal={setShowCreateChannelModal}
+      />
+      <InviteWorkspaceModal
+        show={showInviteWorkspaceModal}
+        onCloseModal={onCloseModal}
+        setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
+      />
+      <InviteChannelModal
+        show={showInviteChannelModal}
+        onCloseModal={onCloseModal}
+        setShowInviteChannelModal={setShowInviteChannelModal}
+      />
     </div>
   );
 };
