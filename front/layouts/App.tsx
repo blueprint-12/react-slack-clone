@@ -15,10 +15,11 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LogIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/workspace" element={<WorkSpace />}>
+        <Route path="/workspaces" element={<Navigate to="/workspaces/sleact/channels/일반" />} />
+        <Route path="/workspaces/:workspace" element={<WorkSpace />}>
           <Route index element={<Channel />} />
-          <Route path="channel" index element={<Channel />} />
-          <Route path="dm" element={<DirectMessage />} />
+          <Route path="channels/:channel" index element={<Channel />} />
+          <Route path="dm/:id" element={<DirectMessage />} />
         </Route>
         {/* 기본 redirect */}
         <Route path="/" element={<Navigate to="/login" />} />
