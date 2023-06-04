@@ -3,9 +3,12 @@ import { Button, Error, Header, Input, Label, LinkContainer, Success, Form } fro
 import useInput from '@hooks/useInput';
 import axios from 'axios';
 // 리액트 라우터를 쓸 때에는 a태그보단 Link 태그 활용
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import useSWR from 'swr';
+import fetcher from '@utils/fetcher';
 
 const SignUp = () => {
+  const { data: userData } = useSWR('http://localhost:3095/api/users', fetcher);
   //TODO: 화면에 표시하는 데이터들은 무조건 state로 만들어주기
   const [nickname, onChangeNickname, setNickname] = useInput<string>('');
   const [email, onChangeEmail, setEmail] = useInput<string>('');
@@ -43,7 +46,7 @@ const SignUp = () => {
       if (!mismatchError && nickname) {
         console.log('서버로 회원가입하기');
         axios
-          .post('http://localhost:3095/api/users', {
+          .post('/api/users', {
             email,
             nickname,
             password,
@@ -67,8 +70,14 @@ const SignUp = () => {
     },
     [password, email, nickname, passwordCheck, mismatchError],
   );
+  // TODO: 리턴할 JSX
+  let content;
 
-  const content = (
+  if (userData === undefined) content = <div>Loading... userData...</div>;
+
+  if (userData) return <Navigate to="/workspaces/sleact/channels/일반" replace={true} />;
+
+  content = (
     <div id="container">
       <Header>Sleact</Header>
       <Form onSubmit={onSubmit}>

@@ -9,7 +9,7 @@ import useSWR from 'swr';
 const LogIn = () => {
   // ? data, error가 바뀌는 순간 `리렌더링`
   // mutate는 서버에 api콜을 보내는게 아니라 데이터 수정을 해준다.
-  const { data: userData, error, isLoading, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data: userData, error, isLoading, mutate } = useSWR('/api/users', fetcher);
 
   console.log('data', userData);
 
@@ -27,7 +27,7 @@ const LogIn = () => {
       setPassword('');
       axios
         .post(
-          'http://localhost:3095/api/users/login',
+          '/api/users/login',
           { email, password },
           {
             withCredentials: true,
@@ -49,7 +49,7 @@ const LogIn = () => {
   );
 
   // ? content return은 hooks아래에 존재해야 한다.
-  if (userData) return <Navigate to="/workspace/channel" replace={true} />;
+  if (userData) return <Navigate to="/workspaces/sleact/channels/일반" replace={true} />;
 
   return (
     <div id="container">
