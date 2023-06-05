@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
+
 import {
   Channels,
   Header,
@@ -19,7 +20,7 @@ import {
 } from './styles';
 
 import axios from 'axios';
-import { Navigate, Outlet, useParams } from 'react-router';
+import { Navigate, Route, Routes, useParams } from 'react-router';
 
 import gravatar from 'gravatar';
 import Menu from '@components/Menu';
@@ -32,6 +33,12 @@ import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
+import ChannelList from '@components/ChannelList';
+import DMList from '@components/DMList';
+
+//TODO: 중첩라우트
+const Channel = React.lazy(() => import('@pages/Channel'));
+const DirectMessage = React.lazy(() => import('@pages/DirectMessage'));
 
 const WorkSpace = () => {
   const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
@@ -159,7 +166,7 @@ const WorkSpace = () => {
         <Workspaces>
           {userData?.Workspaces.map((ws) => {
             return (
-              <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
+              <Link key={ws.id} to={`/workspaces/${ws.url}/channels/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
               </Link>
             );
@@ -177,14 +184,16 @@ const WorkSpace = () => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
-            {channelData?.map((channel) => (
-              <div key={channel.id}>{channel.name}</div>
-            ))}
+            <ChannelList />
+            <DMList />
           </MenuScroll>
         </Channels>
         <Chats>
           {/* 중첩라우팅 */}
-          <Outlet />
+          <Routes>
+            <Route path="/channels/:channel" element={<Channel />} />
+            <Route path="/dm/:id" element={<DirectMessage />} />
+          </Routes>
         </Chats>
       </WorkspaceWrapper>
       <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
