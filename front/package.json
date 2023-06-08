@@ -12,9 +12,11 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@types/autosize": "^4.0.1",
     "@types/gravatar": "^1.8.3",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "autosize": "^6.0.1",
     "axios": "^1.4.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",

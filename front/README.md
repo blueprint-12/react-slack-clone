@@ -148,3 +148,12 @@ yarn add gravatar @types/gravatar
 ```bash
 yarn add react-toastify
 ```
+
+### autosize(DT)
+
+- textarea에서 shift + enter 키를 눌렀을 때 한쭐씩 늘어나는 효과제공
+- 인증된 라이브러리, 버그 안정성(직접 구현하는 것보다 프로덕트에 적합)
+
+```bash
+yarn add autosize @types/autosize #DT니까 TS사용시 타입패키지도 추가 설치 필요
+```
