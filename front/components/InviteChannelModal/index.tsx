@@ -19,12 +19,12 @@ interface InviteChannelProps {
 const InviteChannelModal = ({ show, onCloseModal, setShowInviteChannelModal }: InviteChannelProps) => {
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+  console.log('채널이름?', workspace, channel);
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
   const { mutate: mutateMember } = useSWR<IUser[]>(
     userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
-  console.log('onClick show', show);
 
   const onInviteMember = useCallback(
     (e: React.FormEvent) => {

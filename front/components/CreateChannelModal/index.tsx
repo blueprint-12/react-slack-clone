@@ -20,14 +20,14 @@ interface ChannelModalProps {
 const CreateChannelModal = ({ show, onCloseModal, setShowCreateChannelModal }: ChannelModalProps) => {
   const { workspace } = useParams<{ workspace: string }>();
 
-  const { data: userData, mutate } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData, mutate } = useSWR<IUser | false>('/api/users', fetcher, {
     suspense: true,
     dedupingInterval: 3000,
   });
 
   // TODO: SWR 3항연산자를 통해 userData가 있는 경우(로그인 상태)에만 api요청을 보낸다. (조건부 요청지원)
   const { data: channelData, mutate: mutateChannel } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
+    userData ? `/api/workspaces/${workspace}/channels` : null,
     fetcher,
   );
   const [newChannel, onChangeNewChannel, setNewChannel] = useInput('');
