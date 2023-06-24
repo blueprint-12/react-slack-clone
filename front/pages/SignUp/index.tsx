@@ -121,7 +121,7 @@ const SignUp = () => {
             />
           </div>
           {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
-          {!nickname && <Error>닉네임을 입력해주세요.</Error>}
+          {!nickname && !signUpSuccess && <Error>닉네임을 입력해주세요.</Error>}
           {signUpErrorMsg && <Error>{signUpErrorMsg}</Error>}
           {signUpSuccess && <Success>회원가입되었습니다! 로그인해주세요.</Success>}
         </Label>
