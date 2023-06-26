@@ -35,6 +35,7 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import ChannelList from '@components/ChannelList';
 import DMList from '@components/DMList';
+import useSocket from '@hooks/useSocket';
 
 //TODO: 중첩라우트
 const Channel = React.lazy(() => import('@pages/Channel'));
@@ -60,8 +61,14 @@ const WorkSpace = () => {
 
   // TODO: SWR 3항연산자를 통해 userData가 있는 경우(로그인 상태)에만 api요청을 보낸다. (조건부 요청지원)
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
+  const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
+  const [socket, disconnect] = useSocket(workspace);
 
-  // console.log('data', userData);
+  useEffect(() => {
+    if(channelData && userData && socket){
+      socket.emit('login', {id: userData.id, channels: channelData.map((v)=> v.id)})
+    }
+  }, [socket, channelData, userData]);
 
   const onClickUserProfile = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     // TODO: 이벤트 버블링 막기
